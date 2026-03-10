@@ -8,13 +8,14 @@ Aucune clé sensible n'est stockée dans ce dépôt : toutes les valeurs sont in
 
 ## Variables d'environnement
 
-Configurez ces 5 variables dans le panneau **Environment** de votre service Render :
+Configurez ces 6 variables dans le panneau **Environment** de votre service Render :
 
 | Variable | Description | Où la trouver |
 |---|---|---|
 | `OLLAMA_API_KEY` | Clé API pour accéder à Ollama Cloud | Dashboard Ollama Cloud |
 | `OLLAMA_API_BASE` | URL de base de l'API Ollama (ex : `https://api.ollama.com`) | Dashboard Ollama Cloud |
-| `SUPABASE_API_KEY` | Clé API `service_role` de votre projet Supabase | [Supabase Dashboard](https://app.supabase.com) → Settings → API → `service_role` key |
+| `SUPABASE_ACCESS_TOKEN` | Personal Access Token (PAT) Supabase | [supabase.com/dashboard/account/tokens](https://supabase.com/dashboard/account/tokens) → Generate new token |
+| `SUPABASE_PROJECT_REF` | Référence de votre projet Supabase (ex : `abcdefghijklmnop`) | URL de votre projet : `https://supabase.com/dashboard/project/<project_ref>` |
 | `TELEGRAM_BOT_TOKEN` | Token du bot Telegram | [@BotFather](https://t.me/BotFather) sur Telegram → `/mybots` → API Token |
 | `TELEGRAM_USER_ID` | ID Telegram numérique de l'utilisateur autorisé | [@userinfobot](https://t.me/userinfobot) sur Telegram |
 
@@ -67,7 +68,7 @@ Sélectionnez l'offre **Free** (512 Mo RAM, 0.1 CPU). PicoClaw est conçu pour f
 
 ### Étape 3 — Ajouter les variables d'environnement
 
-Dans l'onglet **Environment**, ajoutez les 5 variables listées ci-dessus avec leurs valeurs respectives.
+Dans l'onglet **Environment**, ajoutez les 6 variables listées ci-dessus avec leurs valeurs respectives.
 
 ### Étape 4 — Déployer
 
@@ -88,7 +89,7 @@ Cliquez sur **Deploy**. Render construira l'image Docker, démarrera le conteneu
 ## Fonctionnement
 
 Au démarrage du conteneur, le script `entrypoint.sh` :
-1. Vérifie que les 5 variables d'environnement sont définies
+1. Vérifie que les 6 variables d'environnement sont définies
 2. Copie `AGENTS.md` dans le workspace PicoClaw
 3. Génère dynamiquement `/app/config.json` avec les valeurs injectées (incluant le serveur MCP Supabase)
 4. Lance PicoClaw avec `PICOCLAW_CONFIG=/app/config.json picoclaw gateway`

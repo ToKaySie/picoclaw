@@ -7,7 +7,8 @@ echo "Checking required environment variables..."
 REQUIRED_VARS=(
   "OLLAMA_API_KEY"
   "OLLAMA_API_BASE"
-  "SUPABASE_API_KEY"
+  "SUPABASE_ACCESS_TOKEN"
+  "SUPABASE_PROJECT_REF"
   "TELEGRAM_BOT_TOKEN"
   "TELEGRAM_USER_ID"
 )
@@ -59,9 +60,9 @@ cat > /app/config.json <<EOF
         "supabase": {
           "enabled": true,
           "type": "http",
-          "url": "https://mcp.supabase.com",
+          "url": "https://mcp.supabase.com/mcp?project_ref=${SUPABASE_PROJECT_REF}",
           "headers": {
-            "Authorization": "Bearer ${SUPABASE_API_KEY}"
+            "Authorization": "Bearer ${SUPABASE_ACCESS_TOKEN}"
           }
         }
       }
