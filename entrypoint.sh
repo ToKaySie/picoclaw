@@ -42,7 +42,7 @@ cat > /app/config.json <<EOF
   "model_list": [
     {
       "model_name": "mon-modele",
-      "model": "ollama/qwen3.5:0.8b",
+      "model": "ollama/qwen3.5:397b-cloud",
       "api_key": "${OLLAMA_API_KEY}",
       "api_base": "${OLLAMA_API_BASE}"
     }

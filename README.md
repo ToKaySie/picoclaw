@@ -1,6 +1,6 @@
 # PicoClaw — Déploiement Render
 
-PicoClaw est un agent IA ultra-léger déployé sur [Render](https://render.com) via Docker. Il utilise **Ollama Cloud** comme fournisseur d'IA (modèle `qwen3.5:0.8b`), **Supabase** via MCP pour la mémoire persistante, et un **bot Telegram** comme interface de communication.
+PicoClaw est un agent IA ultra-léger déployé sur [Render](https://render.com) via Docker. Il utilise **Ollama Cloud** comme fournisseur d'IA (modèle `qwen3.5:397b-cloud`), **Supabase** via MCP pour la mémoire persistante, et un **bot Telegram** comme interface de communication.
 
 Aucune clé sensible n'est stockée dans ce dépôt : toutes les valeurs sont injectées dynamiquement via des variables d'environnement au démarrage du conteneur.
 
