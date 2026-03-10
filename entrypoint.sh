@@ -75,11 +75,11 @@ echo "PDF generated: $PDF_FILE"
 # Upload to Supabase Storage if credentials are available
 if [ -n "$SUPABASE_PROJECT_REF" ] && [ -n "$SUPABASE_ANON_KEY" ]; then
   SUPABASE_URL="https://${SUPABASE_PROJECT_REF}.supabase.co"
-  STORAGE_PATH="pdfs/${BASENAME}_$(date +%s).pdf"
+  STORAGE_FILE="${BASENAME}_$(date +%s).pdf"
 
   echo "Uploading to Supabase Storage..."
   RESPONSE=$(curl -s -w "\n%{http_code}" \
-    -X POST "${SUPABASE_URL}/storage/v1/object/pdfs/${STORAGE_PATH}" \
+    -X POST "${SUPABASE_URL}/storage/v1/object/pdfs/${STORAGE_FILE}" \
     -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
     -H "Content-Type: application/pdf" \
     --data-binary @"$PDF_FILE")
@@ -88,7 +88,7 @@ if [ -n "$SUPABASE_PROJECT_REF" ] && [ -n "$SUPABASE_ANON_KEY" ]; then
   BODY=$(echo "$RESPONSE" | head -n -1)
 
   if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "201" ]; then
-    PUBLIC_URL="${SUPABASE_URL}/storage/v1/object/public/pdfs/${STORAGE_PATH}"
+    PUBLIC_URL="${SUPABASE_URL}/storage/v1/object/public/pdfs/${STORAGE_FILE}"
     echo "UPLOAD_SUCCESS"
     echo "DOWNLOAD_URL=${PUBLIC_URL}"
   else
