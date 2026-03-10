@@ -66,4 +66,10 @@ Aucune clé sensible n'est stockée dans le dépôt : toutes les valeurs sont in
 
 ---
 
-> ✅ **Implémentation validée le 10/03/2026** — Tous les fichiers sont créés, la syntaxe est vérifiée, les fins de ligne sont en LF, et aucune clé sensible n'apparaît dans le dépôt. Le projet est prêt à être poussé sur GitHub et déployé sur Render.
+> ✅ **Implémentation validée le 10/03/2026** — Tous les fichiers sont créés, la syntaxe est vérifiée, les fins de ligne sont en LF, et aucune clé sensible n'apparaît dans le dépôt.
+>
+> ✅ **Déploiement validé le 10/03/2026** — PicoClaw déployé sur Render avec succès. Bot Telegram fonctionnel. Corrections appliquées :
+> - Provider `ollama/` avec `api_base` personnalisé (au lieu de `ollama_cloud/` inexistant)
+> - Config générée dans `~/.picoclaw/config.json` (chemin par défaut, pas de flag `--config`)
+> - Modèle `qwen3.5:397b-cloud`
+> - Gateway accessible sur `0.0.0.0:3000`

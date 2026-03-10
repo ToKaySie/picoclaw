@@ -15,9 +15,10 @@ RUN wget -q https://github.com/sipeed/picoclaw/releases/latest/download/picoclaw
 # Create app directory
 RUN mkdir -p /app
 
-# Copy entrypoint script
+# Copy entrypoint script and AGENTS.md
 COPY entrypoint.sh /app/entrypoint.sh
 RUN chmod +x /app/entrypoint.sh
+COPY AGENTS.md /app/AGENTS.md
 
 # Set working directory
 WORKDIR /app

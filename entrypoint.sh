@@ -7,7 +7,7 @@ echo "Checking required environment variables..."
 REQUIRED_VARS=(
   "OLLAMA_API_KEY"
   "OLLAMA_API_BASE"
-  "SUPABASE_DATABASE_URL"
+  "SUPABASE_API_KEY"
   "TELEGRAM_BOT_TOKEN"
   "TELEGRAM_USER_ID"
 )
@@ -27,25 +27,44 @@ fi
 
 echo "All environment variables are set."
 
-# Create PicoClaw config directory
-mkdir -p /root/.picoclaw
+# Create PicoClaw workspace directory
+mkdir -p /root/.picoclaw/workspace
 
-echo "Generating /root/.picoclaw/config.json..."
+# Copy AGENTS.md to workspace
+echo "Copying AGENTS.md to workspace..."
+cp /app/AGENTS.md /root/.picoclaw/workspace/AGENTS.md
 
-cat > /root/.picoclaw/config.json <<EOF
+# Generate config.json
+echo "Generating /app/config.json..."
+
+cat > /app/config.json <<EOF
 {
   "model_list": [
     {
       "model_name": "mon-modele",
-      "model": "ollama/qwen3.5:397b-cloud",
+      "model": "ollama/qwen3.5:0.8b",
       "api_key": "${OLLAMA_API_KEY}",
       "api_base": "${OLLAMA_API_BASE}"
     }
   ],
   "agents": {
     "defaults": {
-      "model": "mon-modele",
-      "database_url": "${SUPABASE_DATABASE_URL}"
+      "model": "mon-modele"
+    }
+  },
+  "tools": {
+    "mcp": {
+      "enabled": true,
+      "servers": {
+        "supabase": {
+          "enabled": true,
+          "type": "http",
+          "url": "https://mcp.supabase.com",
+          "headers": {
+            "Authorization": "Bearer ${SUPABASE_API_KEY}"
+          }
+        }
+      }
     }
   },
   "channels": {
@@ -62,7 +81,8 @@ cat > /root/.picoclaw/config.json <<EOF
 }
 EOF
 
-echo "config.json generated successfully at /root/.picoclaw/config.json"
+echo "config.json generated successfully."
 echo "Starting PicoClaw gateway..."
 
+export PICOCLAW_CONFIG=/app/config.json
 exec picoclaw gateway
