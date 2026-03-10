@@ -98,6 +98,17 @@ if [ -n "$SUPABASE_PROJECT_REF" ] && [ -n "$SUPABASE_ANON_KEY" ]; then
 else
   echo "Supabase credentials not set. PDF available locally at: $PDF_FILE"
 fi
+
+# Send directly to Telegram
+if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_USER_ID" ]; then
+  echo "Sending PDF directly to Telegram..."
+  curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendDocument" \
+    -F chat_id="${TELEGRAM_USER_ID}" \
+    -F document=@"$PDF_FILE" \
+    -F caption="📄 Voici ton document PDF généré !" > /dev/null
+  echo "TELEGRAM_SUCCESS"
+  echo "Le PDF a été envoyé directement sur Telegram à l'utilisateur !"
+fi
 SCRIPT
 chmod +x /usr/local/bin/compile-latex
 

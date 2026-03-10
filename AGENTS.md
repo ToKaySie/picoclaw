@@ -36,9 +36,9 @@ Tu peux générer des documents PDF à partir de code LaTeX. Voici la procédure
    ```
    compile-latex /root/.picoclaw/workspace/pdfs/document.tex
    ```
-3. Le script compile le LaTeX et upload le PDF sur Supabase Storage.
-4. Lis la sortie du script : elle contient une ligne `DOWNLOAD_URL=...` avec le lien.
-5. Envoie ce lien de téléchargement à l'utilisateur.
+3. Le script compile le LaTeX, l'uploade sur Supabase, et **l'envoie automatiquement** à l'utilisateur sur Telegram.
+4. Lis la sortie du script pour t'assurer que le processus a réussi (cherche `TELEGRAM_SUCCESS`).
+5. Confirme à l'utilisateur que tu lui as bien envoyé le PDF directement dans la conversation (ne crée pas de lien de téléchargement imaginaire).
 
 ### Modèle LaTeX pour fiches de révision
 Utilise toujours ce squelette de base pour les fiches de révision :
