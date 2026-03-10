@@ -43,10 +43,18 @@ L'IA envoie le lien de téléchargement sur Telegram
 
 ## Todo-list d'implémentation
 
-- [ ] Ajouter tectonic dans le Dockerfile
-- [ ] Ajouter `SUPABASE_ANON_KEY` comme variable d'environnement
-- [ ] Activer Supabase Storage dans la config MCP
-- [ ] Ajouter les instructions LaTeX/PDF dans AGENTS.md
-- [ ] Mettre à jour README.md avec les nouvelles variables
-- [ ] Push sur GitHub
-- [ ] Test réussi ?
+- [x] Ajouter tectonic dans le Dockerfile
+- [x] Ajouter `SUPABASE_ANON_KEY` comme variable d'environnement
+- [x] Activer Supabase Storage dans la config MCP
+- [x] Ajouter les instructions LaTeX/PDF dans AGENTS.md
+- [x] Mettre à jour README.md avec les nouvelles variables
+- [x] Push sur GitHub
+- [x] Test réussi ? ✅ Confirmé par l'utilisateur (le PDF s'envoie bien directement dans Telegram !)
+
+---
+
+> ✅ **Fonctionnalité validée le 10/03/2026**
+> Le flux complet fonctionne parfaitement : l'IA écrit le `.tex`, le script le compile silencieusement avec Tectonic, l'upload dans Supabase Storage, et le bot l'envoie nativement sur Telegram via l'API.
+>
+> ⚠️ **Note sur la performance :**
+> L'utilisation d'un modèle aussi colossal que `qwen3.5:397b-cloud` pour générer un document LaTeX de plusieurs pages peut prendre un certain temps à cause du "thinking" et du temps de réponse de l'API externe (jusqu'à 6 minutes constatées). C'est un délai normal pour un modèle de presque 400 milliards de paramètres !
