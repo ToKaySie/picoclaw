@@ -26,9 +26,13 @@ if [ "$MISSING" -eq 1 ]; then
 fi
 
 echo "All environment variables are set."
-echo "Generating /app/config.json..."
 
-cat > /app/config.json <<EOF
+# Create PicoClaw config directory
+mkdir -p /root/.picoclaw
+
+echo "Generating /root/.picoclaw/config.json..."
+
+cat > /root/.picoclaw/config.json <<EOF
 {
   "providers": {
     "ollama_cloud": {
@@ -56,11 +60,15 @@ cat > /app/config.json <<EOF
       "token": "${TELEGRAM_BOT_TOKEN}",
       "allow_from": ["${TELEGRAM_USER_ID}"]
     }
+  },
+  "gateway": {
+    "host": "0.0.0.0",
+    "port": 3000
   }
 }
 EOF
 
-echo "config.json generated successfully."
+echo "config.json generated successfully at /root/.picoclaw/config.json"
 echo "Starting PicoClaw gateway..."
 
-exec picoclaw gateway --config /app/config.json
+exec picoclaw gateway
