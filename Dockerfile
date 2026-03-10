@@ -1,8 +1,11 @@
 FROM debian:bookworm-slim
 
-# Install minimal dependencies
+# Install minimal dependencies + Tectonic runtime libraries
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends wget ca-certificates bash curl && \
+    apt-get install -y --no-install-recommends \
+    wget ca-certificates bash curl \
+    libfontconfig1 libfreetype6 libgraphite2-3 \
+    libharfbuzz0b libicu72 libssl3 && \
     rm -rf /var/lib/apt/lists/*
 
 # Download and install PicoClaw binary
