@@ -9,6 +9,7 @@ REQUIRED_VARS=(
   "OLLAMA_API_BASE"
   "SUPABASE_ACCESS_TOKEN"
   "SUPABASE_PROJECT_REF"
+  "SUPABASE_ANON_KEY"
   "TELEGRAM_BOT_TOKEN"
   "TELEGRAM_USER_ID"
 )
@@ -35,6 +36,71 @@ mkdir -p /root/.picoclaw/workspace
 echo "Copying AGENTS.md to workspace..."
 cp /app/AGENTS.md /root/.picoclaw/workspace/AGENTS.md
 
+# Create PDF output directory in workspace
+mkdir -p /root/.picoclaw/workspace/pdfs
+
+# Create LaTeX compilation helper script
+cat > /usr/local/bin/compile-latex <<'SCRIPT'
+#!/usr/bin/env bash
+set -e
+
+TEX_FILE="$1"
+
+if [ -z "$TEX_FILE" ]; then
+  echo "ERROR: Usage: compile-latex <file.tex>"
+  exit 1
+fi
+
+if [ ! -f "$TEX_FILE" ]; then
+  echo "ERROR: File not found: $TEX_FILE"
+  exit 1
+fi
+
+BASENAME=$(basename "$TEX_FILE" .tex)
+DIRNAME=$(dirname "$TEX_FILE")
+
+echo "Compiling $TEX_FILE with tectonic..."
+cd "$DIRNAME"
+tectonic "$TEX_FILE" 2>&1
+
+PDF_FILE="${DIRNAME}/${BASENAME}.pdf"
+
+if [ ! -f "$PDF_FILE" ]; then
+  echo "ERROR: PDF was not generated."
+  exit 1
+fi
+
+echo "PDF generated: $PDF_FILE"
+
+# Upload to Supabase Storage if credentials are available
+if [ -n "$SUPABASE_PROJECT_REF" ] && [ -n "$SUPABASE_ANON_KEY" ]; then
+  SUPABASE_URL="https://${SUPABASE_PROJECT_REF}.supabase.co"
+  STORAGE_PATH="pdfs/${BASENAME}_$(date +%s).pdf"
+
+  echo "Uploading to Supabase Storage..."
+  RESPONSE=$(curl -s -w "\n%{http_code}" \
+    -X POST "${SUPABASE_URL}/storage/v1/object/pdfs/${STORAGE_PATH}" \
+    -H "Authorization: Bearer ${SUPABASE_ANON_KEY}" \
+    -H "Content-Type: application/pdf" \
+    --data-binary @"$PDF_FILE")
+
+  HTTP_CODE=$(echo "$RESPONSE" | tail -1)
+  BODY=$(echo "$RESPONSE" | head -n -1)
+
+  if [ "$HTTP_CODE" = "200" ] || [ "$HTTP_CODE" = "201" ]; then
+    PUBLIC_URL="${SUPABASE_URL}/storage/v1/object/public/pdfs/${STORAGE_PATH}"
+    echo "UPLOAD_SUCCESS"
+    echo "DOWNLOAD_URL=${PUBLIC_URL}"
+  else
+    echo "WARNING: Upload failed (HTTP $HTTP_CODE): $BODY"
+    echo "PDF is still available locally at: $PDF_FILE"
+  fi
+else
+  echo "Supabase credentials not set. PDF available locally at: $PDF_FILE"
+fi
+SCRIPT
+chmod +x /usr/local/bin/compile-latex
+
 # Generate config.json
 echo "Generating /app/config.json..."
 
@@ -60,7 +126,7 @@ cat > /app/config.json <<EOF
         "supabase": {
           "enabled": true,
           "type": "http",
-          "url": "https://mcp.supabase.com/mcp?project_ref=${SUPABASE_PROJECT_REF}",
+          "url": "https://mcp.supabase.com/mcp?project_ref=${SUPABASE_PROJECT_REF}&features=database,storage",
           "headers": {
             "Authorization": "Bearer ${SUPABASE_ACCESS_TOKEN}"
           }
